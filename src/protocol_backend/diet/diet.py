@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass, field
 try:
-    from protocol_backend.diet._base import DietBase
+    from diet._base import DietBase
 except ModuleNotFoundError:
     from src.protocol_backend.diet._base import DietBase
 
@@ -33,7 +33,7 @@ class Meal(DietBase):
             initial_food += food
         # when you set a new recipe you update the previous total
         self.set_total(initial_food.total)
-    
+
         self.__recipe = recipe
         return self
 
@@ -58,7 +58,7 @@ class Diet(DietBase):
 
         self.__meals = meals
         return self
-    
+
     @property
     def meals(self):
         return self.__meals

@@ -8,11 +8,12 @@ base_df_cols = ["test_col1"]
 base_df = pd.DataFrame(base_df_values, columns=base_df_cols)
 base_table_name = "test_table"
 another_df_cols = ["another_col"]
-another_df_values = [0,1,1,1,1,1]
+another_df_values = [0, 1, 1, 1, 1, 1]
 another_df = pd.DataFrame(another_df_values, columns=another_df_cols)
 another_table_name = "another_test_table"
 
 print("Testing:" + ExcelDatabase.__doc__)
+
 
 class Test_ExcelDatabase(unittest.TestCase):
 
@@ -25,6 +26,7 @@ class Test_ExcelDatabase(unittest.TestCase):
 
     def tearDown(self):
         self.test_client.delete_database(folder_name)
+
 
 if __name__ == "__main__":
     unittest.main()

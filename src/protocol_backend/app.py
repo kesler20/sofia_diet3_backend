@@ -8,9 +8,10 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from starlette.requests import Request
 import json
 import pickle
+
 try:
-    from protocol_backend.protocol_database.exceldatabase import ExcelDatabase
-    from protocol_backend.diet.diet import Food, Meal, Diet
+    from protocol_database.exceldatabase import ExcelDatabase
+    from diet.diet import Food, Meal, Diet
 except ModuleNotFoundError:
     from src.protocol_backend.protocol_database.exceldatabase import ExcelDatabase
     from src.protocol_backend.diet.diet import Food, Meal, Diet
@@ -205,11 +206,10 @@ async def handle_diet_upload(diet=Body(...)):
     #     ["Weekday", "Name", "Cost (£)", "calories (g/amount)", "protein (g/amount)", "recipe"],
     #     [[diet["weekDay"]], [new_diet.total["name"][0]], [new_diet.cost], [new_diet.calories], [new_diet.protein], [new_diet.meals[0].recipe]]
     # )
-    
+
     # reset the diet every new week
     if db.query_table(lambda table: table["Weekday"] == "Sunday", "diet")["Weekday"].any():
         db.delete_table("diet")
-
 
     for meal in new_diet.meals:
         db.append_row([diet["weekDay"], meal.name, meal.cost, meal.calories, meal.protein, meal.recipe], "diet")

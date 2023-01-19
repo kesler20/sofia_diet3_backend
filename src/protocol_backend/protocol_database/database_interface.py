@@ -1,9 +1,12 @@
 import pandas as pd
 import os
-from database_client import DatabaseClient
 from table_schema import SQL_STATEMENTS
 from datetime import datetime
 from typing import Dict, Optional, List, Any, Tuple, Union
+try:
+    from database_client import DatabaseClient
+except ModuleNotFoundError:
+    from src.protocol_backend.protocol_database.database_client import DatabaseClient
 
 '''The database interface should allow you to implement different database clients from a single Object
 The notes for the SQL queries can be found here 

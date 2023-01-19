@@ -5,8 +5,8 @@ import pandas as pd
 from typing import List, Any, Union, Dict, Optional, Tuple, Callable
 from dataclasses import dataclass
 try:
-    from protocol_backend.protocol_database._types import DataFrame
-    from protocol_backend.protocol_database._base import folder_name
+    from _types import DataFrame
+    from _base import folder_name
 except ModuleNotFoundError:
     from src.protocol_backend.protocol_database._types import DataFrame
     from src.protocol_backend.protocol_database._base import folder_name
