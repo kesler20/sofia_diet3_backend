@@ -458,12 +458,6 @@ class ExcelDatabase:
         if table_name == "":
             return None
         table = self.get_table(table_name)
-        if self.__guard_clause(
-            [(table_name, str), (row, list)],
-            "append_row"
-        ) is None or len(row) != len(table.columns):
-
-            return None
 
         table.loc[len(table[table.columns[0]])] = row
         table.to_excel(os.path.join(self.folder_name,

@@ -23,8 +23,15 @@ class DietBase:
 
     def __mul__(self, amount: Union[int, float]):
         if type(amount) == int or type(amount) == float:
-            self.__total: Dict[str, Any] = {
-                k: self[k] * amount for k in self.__total.keys()}
+            new_total = { "name" : [] }
+            for k in self.total.keys():
+                try:
+                    val = float(self.total[k])
+                    new_total[k] = val * amount
+                except:
+                    pass
+            self.set_total(new_total)
+            print(self.total)
             return self
         else:
             raise TypeError

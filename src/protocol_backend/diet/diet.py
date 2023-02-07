@@ -11,7 +11,8 @@ class Food(DietBase):
     __vendor_name: str = ""
 
     def set_vendor(self, vendor: str):
-        self.__vendor_name = vendor
+        self.set_name(self.name + f" ({vendor})")
+        return self
 
     @property
     def vendor_name(self):

@@ -46,7 +46,7 @@ app.add_middleware(
 )
 
 db = ExcelDatabase()
-
+BASE_FOOD_AMOUNT = 100
 
 @app.get("/", tags=["root"])
 async def read_root():
@@ -78,17 +78,17 @@ async def handle_upload(food=Body(...)):
         float(food["protein"])
     ).set_calories(
         int(food["calories"])
-    )
+    ).set_vendor(str(food["vendor"]))
 
-    db.create_table(
-        "food",
-        ["Name", "Cost (£)", "calories (g/amount)", "protein (g/amount)", "amount (g)"],
-        [[food.name], [food.cost], [food.calories], [food.protein], [100]]
-    )
-    # db.append_row(
-    #     [food.name, food.cost, food.calories, food.protein],
-    #     "food"
+    # db.create_table(
+    #     "food",
+    #     ["Name", "Cost (£)", "calories (g/amount)", "protein (g/amount)", "amount (g)"],
+    #     [[food.name], [food.cost], [food.calories], [food.protein], [100]]
     # )
+    db.append_row(
+        [food.name, food.cost, food.calories, food.protein, BASE_FOOD_AMOUNT],
+        "food"
+    )
 
     print(db.get_table("food"))
     print("food created successfully ✅")
@@ -126,6 +126,7 @@ async def handle_meal_upload(meal=Body(...)):
 
     recipe = []  # a collection of foods
     for food in meal["recipe"]:
+        amount = float(food["amount"]/BASE_FOOD_AMOUNT)
         if len(list(food.keys())) == 1:
             pass
         else:
@@ -138,20 +139,20 @@ async def handle_meal_upload(meal=Body(...)):
                     float(food["protein"])
                 ).set_calories(
                     int(food["calories"])
-                )
+                ) * amount
             )
 
     meal = Meal().set_name(meal["mealName"]).set_recipe(recipe)
 
-    # db.create_table(
-    #     "meals",
-    #     ["Name", "Cost (£)", "calories (g/amount)", "protein (g/amount)", "recipe"],
-    #     [[meal.name], [meal.cost], [meal.calories], [meal.protein], meal.recipe]
-    # )
-    db.append_row(
-        [meal.name, meal.cost, meal.calories, meal.protein, meal.recipe],
-        "meals"
+    db.create_table(
+        "meals",
+        ["Name", "Cost (£)", "calories (g/amount)", "protein (g/amount)", "recipe"],
+        [meal.name, meal.cost, meal.calories, meal.protein, meal.recipe]
     )
+    # db.append_row(
+    #     [meal.name, meal.cost, meal.calories, meal.protein, meal.recipe],
+    #     "meals"
+    # )
 
     print(db.get_table("meals"))
 
@@ -187,6 +188,8 @@ async def handle_diet_upload(diet=Body(...)):
         diet: 'list[dict]' = json.loads(diet.decode())
     except:
         print(type(diet))
+    
+    print(diet)
 
     new_diet = Diet().set_meals([
         Meal().set_name(
@@ -197,7 +200,7 @@ async def handle_diet_upload(diet=Body(...)):
             float(meal["protein"])
         ).set_calories(
             int(meal["calories"])
-        )
+        ) * float(meal["amount"]/BASE_FOOD_AMOUNT)
         for meal in diet["meals"]
     ])
 
