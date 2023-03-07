@@ -65,7 +65,8 @@ async def read_root():
 async def handle_upload(food=Body(...)):
 
     # decode the response and turn that into a dictionary
-    food = json.loads(food.decode())
+    if type(food) != dict:
+        food = json.loads(food.decode())
 
     # instantiate a new Food object
     new_food = Food(food["name"]).set_total(food)
@@ -104,7 +105,8 @@ async def delete_meals(mealID=Body(...)):
 async def handle_meal_upload(meal=Body(...)):
 
     # decode the response and turn that into a dictionary
-    meal = json.loads(meal.decode())
+    if type(meal) != dict:
+        meal = json.loads(meal.decode())
 
     # instantiate a new Food object
     new_meal = Meal(meal["mealName"]).set_data(meal["recipe"])
@@ -149,7 +151,10 @@ async def handle_diet_upload(diet=Body(...)):
         pass
 
     # decode the response and turn that into a dictionary
-    diet = json.loads(diet.decode())
+    if type(diet) != dict:
+        diet = json.loads(diet.decode())
+    
+    # instantiate the Diet class
     new_diet = Diet(diet["weekDay"]).set_data(diet["meals"])
 
     # put the new_meal object into the database
