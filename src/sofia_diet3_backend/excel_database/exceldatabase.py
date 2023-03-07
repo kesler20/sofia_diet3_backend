@@ -3,17 +3,15 @@ import shutil
 from pathlib import Path
 import pandas as pd
 from typing import List, Any, Union, Dict, Optional, Tuple, Callable
-from dataclasses import dataclass
 try:
     from _types import DataFrame
     from _base import folder_name
 except ModuleNotFoundError:
-    from src.protocol_backend.protocol_database._types import DataFrame
-    from src.protocol_backend.protocol_database._base import folder_name
+    from src.sofia_diet3_backend.excel_database._types import DataFrame
+    from src.sofia_diet3_backend.excel_database._base import folder_name
 
 
-@dataclass
-class ExcelDatabase:
+class ExcelDatabase(object):
     """ExcelDatabase is a class"""
 
     __folder_name:  str = folder_name
@@ -170,7 +168,7 @@ class ExcelDatabase:
         result : None
         """
 
-        df = pd.DataFrame(data={col: rows[i] for i, col in enumerate(columns)})
+        df = pd.DataFrame(data={col: rows[i] if type(rows[i]) == list else [rows[i]] for i, col in enumerate(columns)})
 
         if not Path(self.folder_name).exists():
             os.mkdir(self.folder_name)
@@ -443,7 +441,7 @@ class ExcelDatabase:
         """append_row has the following params
 
         Parameters
-        ---
+        ----------
         row : list[list[any]]
             a collection of items containing 1 new value for the 
             last rows of each column in the data frame, therefore
@@ -451,12 +449,11 @@ class ExcelDatabase:
 
         table_name : str
             the name of the table where the row will be inserted
+        
         Returns
-        ---
-        result: None
+        -------
+        None
         """
-        if table_name == "":
-            return None
         table = self.get_table(table_name)
 
         table.loc[len(table[table.columns[0]])] = row
@@ -495,6 +492,34 @@ class ExcelDatabase:
         self.__pp(table_name, "Deleting rows", table)
         table.to_excel(os.path.join(self.folder_name,
                        f"{table_name}.xlsx"), index=False)
+    
+    def put_table(self,columns: List[str], column_values: List[Any], table_name: str) -> None:
+        """put_table will create or append a table to the database
+
+        Parameters
+        ----------
+        columns : str
+            the columns of the table
+        
+        column_values : List[Any]
+            the values of the columns 
+            this has to be an array of the same length of `columns`
+        
+        table_name : str
+            the name of the table (excel file) that we want to
+            create/update
+        
+        Returns
+        -------
+        None
+        """
+        
+        # if the file food.xlsx exists append row if it doesnt create the file with the new columns
+        if Path(os.path.join(self.folder_name, f"{table_name}.xlsx")).exists():
+            self.append_row(column_values,table_name)
+
+        else:
+            self.create_table(table_name,columns,column_values)
 
     def put_column(self, column_name: str, column_values: List[Any], table_name: str) -> None:
         """put_column has the following params

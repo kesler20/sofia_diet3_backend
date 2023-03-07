@@ -1,0 +1,8 @@
+{
+  "name": "food",
+  "vendor": "vendor name",
+  "protein": "0.1",
+  "calories": "1",
+  "cost": "0.1",
+  "link": "https://www.trunk.io/"
+}

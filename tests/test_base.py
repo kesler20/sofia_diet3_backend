@@ -2,7 +2,7 @@ import unittest
 from exceldatabase import ExcelDatabase
 import pandas as pd
 
-folder_name = "test_protocol_backend"
+folder_name = "test_sofia_diet3_backend"
 base_df_values = [1, 2, 3, 4, 5, 65]
 base_df_cols = ["test_col1"]
 base_df = pd.DataFrame(base_df_values, columns=base_df_cols)

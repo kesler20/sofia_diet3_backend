@@ -1,0 +1,23 @@
+{
+  "mealName": "New meal",
+  "recipe": [
+    {
+      "name": "food name",
+      "vendor": "vendor name",
+      "protein": 0.1,
+      "calories": 1,
+      "cost": 0.1,
+      "link": "https://github.com",
+      "amount": 205
+    },
+    {
+      "name": "food name",
+      "vendor": "vendor name",
+      "protein": 0.1,
+      "calories": 1,
+      "cost": 0.1,
+      "link": "https://github.com",
+      "amount": 202
+    }
+  ]
+}
